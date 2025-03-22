@@ -1,13 +1,16 @@
+import { Box } from "@mui/material"
 import ContentPanel from "../components/ContentPanel"
 import Footer from "../components/Footer"
 import Header from "../components/Header"
-import { Box, Card } from "@mui/material"
+
 function HomePage(){
     return (
-        <Box sx = {{display:"flex", flexDirection:"column", border:"2px solid green", alignItems:"center"}}>
-            <Header/>
+        <Box sx = {{display:"flex", flexDirection:"column", alignItems:"center"
+        // ,marginTop:'15vh'
+        }}>
+            {/* <Header/> */}
             <ContentPanel/>
-            <Footer/>
+            {/* <Footer/> */}
         </Box>       
     )
 }
