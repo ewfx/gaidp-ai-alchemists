@@ -1,13 +1,16 @@
-import logo from './logo.svg';
-import './App.css';
-import HomePage from './modules/pages/HomePage';
+import { ThemeProvider } from "@mui/material/styles";
+import "./App.css";
+import HomePage from "./modules/pages/HomePage";
+import theme from "./theme";
+import Layout from "modules/pages/Layout";
 
 function App() {
   return (
-    <>
-      <HomePage/>
-    </>
-    
+    <ThemeProvider theme={theme}>
+      <Layout>
+        <HomePage />
+      </Layout>
+    </ThemeProvider>
   );
 }
 
