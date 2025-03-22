@@ -44,6 +44,7 @@ const ChatAssistant = () => {
         text: inputText,
         
       });
+      console.log(response.data);
   
       // Add the bot's response to the chat
       const botResponse = {
