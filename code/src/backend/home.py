@@ -7,6 +7,7 @@ import io
 from PyPDF2 import PdfReader 
 from fastapi.middleware.cors import CORSMiddleware
 from docx import Document  # For processing Word documents
+from pydantic import BaseModel  # Import BaseModel from Pydantic
 
 app = FastAPI()
 
@@ -40,7 +41,7 @@ async def process_csv(file: UploadFile = File(...)):
     except Exception as e:
         return {"error": f"Failed to process CSV: {str(e)}"}
     
-class RuleRequest:
+class RuleRequest(BaseModel):
     text: str
 
 @app.post("/refineRules")

@@ -30,15 +30,9 @@ const UploadDocCsv = (props) => {
   };
 
   return (
-<<<<<<< HEAD
     <Card sx = {{display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"space-evenly", marginTop:"2%"}}>
       <h2>First Upload a CSV file for Scoring</h2>
       <Card sx={{bgcolor:"transparent", display:"flex", alignItems:"center", flexDirection:"column", borderRadius:"none !important", boxShadow:"none"}}>
-=======
-    <Card sx = {{display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"space-evenly",borderRadius:"none !important", boxShadow:"none"}}>
-      <h2>First Upload a CSV file for Scoring</h2>
-      <Card sx={{ borderRadius:"none !important", boxShadow:"none"}}>
->>>>>>> 7937abaa419056b72e41dab09a37fac0b8cad473
         {/* <label for="file">choose a file</label> */}
         <input className={classes.input_csv}
             type="file"

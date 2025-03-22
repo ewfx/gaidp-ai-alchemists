@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import React, { useState } from 'react';
-=======
-import React, { useState } from "react";
->>>>>>> 7937abaa419056b72e41dab09a37fac0b8cad473
 import {
   Box,
   Button,
@@ -13,7 +9,6 @@ import {
   styled,
   Avatar,
   colors,
-<<<<<<< HEAD
   Card
 } from '@mui/material';
 import { CloudUpload } from '@mui/icons-material';
@@ -28,26 +23,10 @@ const VisuallyHiddenInput = styled('input')({
   bottom: 0,
   left: 0,
   whiteSpace: 'nowrap',
-=======
-  Card,
-} from "@mui/material";
-import { CloudUpload } from "@mui/icons-material";
-
-const VisuallyHiddenInput = styled("input")({
-  clip: "rect(0 0 0 0)",
-  clipPath: "inset(50%)",
-  height: 1,
-  overflow: "hidden",
-  position: "absolute",
-  bottom: 0,
-  left: 0,
-  whiteSpace: "nowrap",
->>>>>>> 7937abaa419056b72e41dab09a37fac0b8cad473
   width: 1,
 });
 
 const StyledUploadBox = styled(Paper)(({ theme }) => ({
-<<<<<<< HEAD
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
@@ -65,31 +44,10 @@ const GenerateRules = () => {
   const [uploadedFile, setUploadedFile] = useState(null);
 
   const handleFileUpload = async (event) => {
-=======
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  justifyContent: "center",
-  padding: theme.spacing(4),
-  border: `2px dashed ${theme.palette.primary.main}`,
-  backgroundColor: theme.palette.background.default,
-  cursor: "pointer",
-  transition: "background-color 0.3s ease",
-  "&:hover": {
-    backgroundColor: theme.palette.action.hover,
-  },
-}));
-
-const GenerateRules = () => {
-  const [uploadedFile, setUploadedFile] = useState(null);
-
-  const handleFileUpload = (event) => {
->>>>>>> 7937abaa419056b72e41dab09a37fac0b8cad473
     const file = event.target.files[0];
     if (file) {
       setUploadedFile(file.name);
       // Handle file processing here
-<<<<<<< HEAD
       const formData = new FormData() 
       formData.append('file', file);
       try {
@@ -106,8 +64,6 @@ const GenerateRules = () => {
       } catch (error) {
         console.error('Error uploading file:', error);
       }
-=======
->>>>>>> 7937abaa419056b72e41dab09a37fac0b8cad473
     }
   };
 
@@ -122,10 +78,6 @@ const GenerateRules = () => {
         p: 4,
       }}
     >
-<<<<<<< HEAD
-
-=======
->>>>>>> 7937abaa419056b72e41dab09a37fac0b8cad473
       {/* Upload Dropbox */}
       <label>
         <StyledUploadBox variant="outlined" sx={{ mb: 4 }}>
@@ -209,8 +161,4 @@ const GenerateRules = () => {
   );
 };
 
-<<<<<<< HEAD
 export default GenerateRules;
-=======
-export default GenerateRules;
->>>>>>> 7937abaa419056b72e41dab09a37fac0b8cad473

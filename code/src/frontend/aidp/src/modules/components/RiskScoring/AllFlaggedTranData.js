@@ -56,11 +56,7 @@ function AllFlaggedTranData(){
     ];
     return (
         
-<<<<<<< HEAD
         <Card sx={{bgcolor:"lightblue"}}>
-=======
-        <Card sx={{borderRadius:"none !important", boxShadow:"none !important"}}>
->>>>>>> 7937abaa419056b72e41dab09a37fac0b8cad473
 
             {accordionItems.map((item)=>{
                 return (

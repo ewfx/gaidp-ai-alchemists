@@ -9,11 +9,7 @@ function FlaggedEntries(){
     }
     
     return (
-<<<<<<< HEAD
         <Card sx={{margin:"-24px", borderLeft:"1px solid red"}}>
-=======
-        <Card sx={{margin:"-24px", borderRadius:"none !important", boxShadow:"none !important"}}>
->>>>>>> 7937abaa419056b72e41dab09a37fac0b8cad473
 
             {!fileUploaded && <UploadDocCsv onUpload = {handleUpload}/>}
             {fileUploaded && 
