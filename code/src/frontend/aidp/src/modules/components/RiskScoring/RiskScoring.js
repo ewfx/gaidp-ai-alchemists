@@ -1,6 +1,12 @@
+import { Card } from "@mui/material"
+import MenuOption from "./MenuOptions"
+import ResultPane from "./ResultPane"
+
 function RiskScoring(){
     return (
-        <h1>Risk scoring</h1>
+        <Card sx = {{margin:"-24px",display:"flex"}}>
+            <MenuOption/> 
+        </Card>
     )
 }
 
