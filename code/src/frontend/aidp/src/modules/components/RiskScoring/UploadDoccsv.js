@@ -1,19 +1,32 @@
 import React, { useState } from 'react';
 import { Card, Box } from '@mui/material';
 import classes from "./UploadDoc.module.css"
+import axios from 'axios';
 const UploadDocCsv = (props) => {
   const [file, setFile] = useState(null);
   const [error, setError] = useState('');
 
   // Handle file input change
-  const handleFileChange = (event) => {
+  const handleFileChange = async (event) => {
     const selectedFile = event.target.files[0];
 
     // Validate file type
     if (selectedFile && selectedFile.type === 'text/csv') {
       setError('');
       setFile(selectedFile);
-
+      const formData = new FormData() 
+      formData.append("file", file); // Append the file to the FormData object
+      try {
+        // Send the file to the backend
+        const response = await axios.post("http://127.0.0.1:8000/auditCustomerData", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        console.log("response:" + response.data)
+      } catch (error) {
+        console.error("Error in processing the csv ", error);
+      }
       // Read the CSV file
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -23,6 +36,7 @@ const UploadDocCsv = (props) => {
       };
       reader.readAsText(selectedFile);
       props.onUpload(true)
+
     } else {
       setError('Please upload a valid CSV file.');
       setFile(null);
