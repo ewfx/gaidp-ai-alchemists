@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 import { CloudUpload } from '@mui/icons-material';
 
+import axios from 'axios';
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
   clipPath: 'inset(50%)',
@@ -42,11 +43,27 @@ const StyledUploadBox = styled(Paper)(({ theme }) => ({
 const GenerateRules = () => {
   const [uploadedFile, setUploadedFile] = useState(null);
 
-  const handleFileUpload = (event) => {
+  const handleFileUpload = async (event) => {
     const file = event.target.files[0];
     if (file) {
       setUploadedFile(file.name);
       // Handle file processing here
+      const formData = new FormData() 
+      formData.append('file', file);
+      try {
+        // Send the file to the backend
+        const response = await axios.post('http://127.0.0.1:8000/generateRules', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+  
+        // Handle the response from the backend
+        console.log(response)
+        console.log('File uploaded successfully:', response.data.message);
+      } catch (error) {
+        console.error('Error uploading file:', error);
+      }
     }
   };
 

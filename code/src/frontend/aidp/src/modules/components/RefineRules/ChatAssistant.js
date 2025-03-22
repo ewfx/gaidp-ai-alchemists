@@ -13,7 +13,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
-
+import axios from "axios";
 const ChatAssistant = () => {
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState("");
@@ -37,14 +37,20 @@ const ChatAssistant = () => {
     setMessages((prev) => [...prev, userMessage]);
     setInputText("");
 
-    // Simulate bot response
-    setTimeout(async () => {
+    try {
+      // Send the user message to the bot's backend
+      const response = await axios.post("http://127.0.0.1:8000/refineRules", {
+        text: inputText,
+        
+      });
+  
+      // Add the bot's response to the chat
       const botResponse = {
-        text: `Thank you for your input. We're processing: "${inputText}"`,
+        text: response.data.refined_text || "No response received.",
         isBot: true,
       };
       setMessages((prev) => [...prev, botResponse]);
-
+  
       // Finalize conversation on specific trigger
       if (inputText.toLowerCase().includes("finalize")) {
         const finalResponse = {
@@ -60,7 +66,14 @@ const ChatAssistant = () => {
           "New Financial Regulation Implementation Guide",
         ]);
       }
-    }, 1500);
+    } catch (error) {
+      console.error("Error communicating with the bot:", error);
+      const errorResponse = {
+        text: "Sorry, there was an error processing your request.",
+        isBot: true,
+      };
+      setMessages((prev) => [...prev, errorResponse]);
+    }
   };
 
   return (
