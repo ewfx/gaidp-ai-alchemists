@@ -39,7 +39,6 @@ const StyledUploadBox = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.action.hover,
   },
 }));
-
 const GenerateRules = () => {
   const [uploadedFile, setUploadedFile] = useState(null);
 
@@ -62,21 +61,24 @@ const GenerateRules = () => {
         p: 4,
       }}
     >
+
       {/* Upload Dropbox */}
-      <StyledUploadBox variant="outlined" sx={{ mb: 4 }}>
-        <CloudUpload fontSize="large" color="primary" sx={{ mb: 2 }} />
-        <Typography variant="h6" color="primary" gutterBottom>
-          {uploadedFile || "Drop files here or click to upload"}
-        </Typography>
-        <Typography variant="body2" color="textSecondary">
-          Supported formats: .pdf, .doc, .docx
-        </Typography>
-        <VisuallyHiddenInput
-          type="file"
-          accept=".pdf,.doc,.docx"
-          onChange={handleFileUpload}
-        />
-      </StyledUploadBox>
+      <label>
+        <StyledUploadBox variant="outlined" sx={{ mb: 4 }}>
+          <CloudUpload fontSize="large" color="primary" sx={{ mb: 2 }} />
+          <Typography variant="h6" color="primary" gutterBottom>
+            {uploadedFile || "Drop files here or click to upload"}
+          </Typography>
+          <Typography variant="body2" color="textSecondary">
+            Supported formats: .pdf, .doc, .docx
+          </Typography>
+          <VisuallyHiddenInput
+            type="file"
+            accept=".pdf,.doc,.docx"
+            onChange={handleFileUpload}
+          />
+        </StyledUploadBox>
+      </label>
 
       {/* Content Grid */}
       <Grid
@@ -94,14 +96,15 @@ const GenerateRules = () => {
         }}
       >
         <Grid item xs={12} md={6}>
-          <Card variant='outlined'
+          <Card
+            variant="outlined"
             sx={{
               p: 3,
               flex: 1,
               display: "flex",
               flexDirection: "column",
               minHeight: 0,
-              borderRadius:'10px'
+              borderRadius: "10px",
             }}
           >
             <Typography variant="h6" gutterBottom>
@@ -116,14 +119,15 @@ const GenerateRules = () => {
         </Grid>
 
         <Grid item xs={12} md={6}>
-          <Card variant='outlined'
+          <Card
+            variant="outlined"
             sx={{
               p: 3,
               flex: 1,
               display: "flex",
               flexDirection: "column",
               minHeight: 0,
-              borderRadius:'10px'
+              borderRadius: "10px",
             }}
           >
             <Typography variant="h6" gutterBottom>
