@@ -63,7 +63,11 @@ export default function MenuOption() {
         <Tab label="Flagged Transactions" {...a11yProps(1)} />
       </Tabs>
 
+<<<<<<< HEAD
       <Card sx = {{flexBasis:"80%"}}>
+=======
+      <Card sx = {{flexBasis:"80%", borderRadius:"none !important", boxShadow:"none"}}>
+>>>>>>> 7937abaa419056b72e41dab09a37fac0b8cad473
         <TabPanel value={value} index={0}>
             <ResSummary/>
         </TabPanel>

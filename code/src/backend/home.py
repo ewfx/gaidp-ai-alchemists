@@ -18,7 +18,7 @@ app.add_middleware(
     allow_headers=["*"],  # Allow all headers
 )
 
-@app.get("getFlaggedCustomers")
+@app.get("/getFlaggedCustomers")
 async def getFlaggedCustomers():
     pass
 

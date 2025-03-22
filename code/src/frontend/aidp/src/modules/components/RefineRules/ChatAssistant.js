@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
+
 const ChatAssistant = () => {
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState("");
