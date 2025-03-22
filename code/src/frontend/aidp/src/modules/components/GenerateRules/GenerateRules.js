@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   Box,
   Button,
@@ -9,45 +9,61 @@ import {
   styled,
   Avatar,
   colors,
-  Card,
-} from "@mui/material";
-import { CloudUpload } from "@mui/icons-material";
+  Card
+} from '@mui/material';
+import { CloudUpload } from '@mui/icons-material';
 
-const VisuallyHiddenInput = styled("input")({
-  clip: "rect(0 0 0 0)",
-  clipPath: "inset(50%)",
+import axios from 'axios';
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
   height: 1,
-  overflow: "hidden",
-  position: "absolute",
+  overflow: 'hidden',
+  position: 'absolute',
   bottom: 0,
   left: 0,
-  whiteSpace: "nowrap",
+  whiteSpace: 'nowrap',
   width: 1,
 });
 
 const StyledUploadBox = styled(Paper)(({ theme }) => ({
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  justifyContent: "center",
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
   padding: theme.spacing(4),
   border: `2px dashed ${theme.palette.primary.main}`,
   backgroundColor: theme.palette.background.default,
-  cursor: "pointer",
-  transition: "background-color 0.3s ease",
-  "&:hover": {
+  cursor: 'pointer',
+  transition: 'background-color 0.3s ease',
+  '&:hover': {
     backgroundColor: theme.palette.action.hover,
   },
 }));
-
 const GenerateRules = () => {
   const [uploadedFile, setUploadedFile] = useState(null);
 
-  const handleFileUpload = (event) => {
+  const handleFileUpload = async (event) => {
     const file = event.target.files[0];
     if (file) {
       setUploadedFile(file.name);
       // Handle file processing here
+      const formData = new FormData() 
+      formData.append('file', file);
+      try {
+        // Send the file to the backend
+        const response = await axios.post('http://127.0.0.1:8000/generateRules', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+  
+        // Handle the response from the backend
+        console.log(response)
+        console.log('File uploaded successfully:', response.data.message);
+      } catch (error) {
+        console.error('Error uploading file:', error);
+      }
     }
   };
 

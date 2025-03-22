@@ -56,7 +56,7 @@ function AllFlaggedTranData(){
     ];
     return (
         
-        <Card sx={{borderRadius:"none !important", boxShadow:"none !important"}}>
+        <Card sx={{bgcolor:"lightblue"}}>
 
             {accordionItems.map((item)=>{
                 return (
