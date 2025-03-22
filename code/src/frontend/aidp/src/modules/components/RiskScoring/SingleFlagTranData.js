@@ -8,7 +8,6 @@ import MuiAccordionSummary, {
 } from '@mui/material/AccordionSummary';
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
-import { Card } from '@mui/material';
 const Accordion = styled((props) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
 ))(({ theme }) => ({
@@ -27,7 +26,7 @@ const AccordionSummary = styled((props) => (
     {...props}
   />
 ))(({ theme }) => ({
-  backgroundColor: '#f8fafc',
+  backgroundColor: 'rgba(0, 0, 0, .03)',
   flexDirection: 'row-reverse',
 //   border:"0.6px solid lightblue",
   [`& .${accordionSummaryClasses.expandIconWrapper}.${accordionSummaryClasses.expanded}`]:
@@ -55,8 +54,8 @@ export default function SingleFlagTranData(props) {
   };
 
   return (
-    
-      <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')} sx = {{borderRadius:"none !important", boxShadow:"none !important"}}>
+    <div>
+      <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
         <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
           <Typography component="span">Customer number - {props.custNbr}</Typography>
         </AccordionSummary>
@@ -68,6 +67,6 @@ export default function SingleFlagTranData(props) {
           </Typography>
         </AccordionDetails>
       </Accordion>
-    
+    </div>
   );
 }
