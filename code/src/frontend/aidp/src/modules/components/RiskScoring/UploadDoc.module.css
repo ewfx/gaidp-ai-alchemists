@@ -1,0 +1,32 @@
+.input_csv{
+}
+
+input::file-selector-button {
+    font-size: 1.25em;
+    font-weight: 700;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding:10px;
+    background-color: red;
+    display: inline-block;
+    cursor: pointer;
+    transition: 1s;
+}
+.input_csv:focus{
+    background-color: red;
+}
+.input_csv + label{
+    font-size: 1.25em;
+    font-weight: 700;
+    color: white;
+    background-color: black;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.input_csv:focus + label,
+.input_csv + label:hover {
+    background-color: red;
+}
+

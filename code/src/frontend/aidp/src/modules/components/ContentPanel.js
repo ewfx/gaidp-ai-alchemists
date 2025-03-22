@@ -52,7 +52,7 @@ export default function ContentPanel() {
   };
 
   return (
-    <Card sx = {{display:"flex", flexDirection:"column", width:"90%",border:"1px solid yellow", padding:"30px"}}>
+    <Card sx = {{display:"flex", flexDirection:"column", width:"90%", border:"1px solid yellow", flexGrow:1}}>
       
       <AppBar position="static">
         <Tabs
@@ -63,12 +63,12 @@ export default function ContentPanel() {
           variant="fullWidth"
           aria-label="full width tabs example"
         >
-          <Tab label="Item One" {...a11yProps(0)} />
-          <Tab label="Item Two" {...a11yProps(1)} />
-          <Tab label="Item Three" {...a11yProps(2)} />
+          <Tab label="Generate Rules" {...a11yProps(0)} />
+          <Tab label="Refine Rules" {...a11yProps(1)} />
+          <Tab label="Risk Scoring" {...a11yProps(2)} />
         </Tabs>
       </AppBar>
-      <TabPanel value={value} index={0} dir={theme.direction} sx = {{padding:"0px !important", border:"10px solid red"}}>
+      <TabPanel value={value} index={0} dir={theme.direction}>
         <GenerateRules/>
       </TabPanel>
       <TabPanel value={value} index={1} dir={theme.direction}>
