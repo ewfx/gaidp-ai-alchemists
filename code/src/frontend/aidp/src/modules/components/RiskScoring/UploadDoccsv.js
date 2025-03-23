@@ -44,7 +44,7 @@ const UploadDocCsv = (props) => {
   };
 
   return (
-    <Card sx = {{display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"space-evenly", marginTop:"2%"}}>
+    <Card sx = {{display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"space-evenly", boxShadow:"none", borderRadius:"none"}}>
       <h2>First Upload a CSV file for Scoring</h2>
       <Card sx={{bgcolor:"transparent", display:"flex", alignItems:"center", flexDirection:"column", borderRadius:"none !important", boxShadow:"none"}}>
         {/* <label for="file">choose a file</label> */}
