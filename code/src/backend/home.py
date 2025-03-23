@@ -36,9 +36,10 @@ async def getFlaggedCustomers():
 @app.get("/download/{filename}")
 async def download_file(filename: str):
     file_path = os.path.join(UPLOAD_FOLDER, filename)
-    
+    print("file path", file_path)
     # Check if the file exists
     if not os.path.exists(file_path):
+        print("not exixts")
         return {"error": "File not found!"}
 
     return FileResponse(file_path, media_type="text/csv", filename=filename)
@@ -112,7 +113,7 @@ async def anomaly_detection():
     risk_scoring_data.to_csv(file_path_for_data_without_anomalies, index=False)
 
 
-    return {"message": "CSV processed successfully", "filename": "anomalies_with_ids.csv"}
+    return {"message": "CSV processed successfully", "filename": "anomalies_data.csv"}
 
 class RuleRequest(BaseModel):
     text: str
