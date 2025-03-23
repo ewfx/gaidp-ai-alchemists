@@ -43,15 +43,33 @@ const ChatAssistant = () => {
       const response = await axios.post("http://127.0.0.1:8000/refineRules", {
         text: inputText,
         
-      });
+      }).then((response) => {
+      
+      
       console.log(response.data);
-  
-      // Add the bot's response to the chat
+      if(response.data.error!=null){
+        const botResponse = {
+          text: "Please generate rules first.",
+          isBot: true,
+        }
+        setMessages((prev) => [...prev, botResponse]);
+      }
+      else{
+        const botResponse = {
+          text: response.data.refined_text || "No response received.",
+          isBot: true,
+        }
+        setMessages((prev) => [...prev, botResponse]);
+      }
+     
+    }).catch((error) => {
       const botResponse = {
-        text: response.data.refined_text || "No response received.",
+        text: "Unkown error occured.",
         isBot: true,
-      };
+      }
       setMessages((prev) => [...prev, botResponse]);
+    });
+      
   
       // Finalize conversation on specific trigger
       if (inputText.toLowerCase().includes("finalize")) {

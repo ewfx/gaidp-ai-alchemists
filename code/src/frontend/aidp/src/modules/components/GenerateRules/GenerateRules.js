@@ -41,30 +41,64 @@ const StyledUploadBox = styled(Paper)(({ theme }) => ({
   },
 }));
 const GenerateRules = () => {
-  const [uploadedFile, setUploadedFile] = useState(null);
+  const [uploadedFile, setUploadedFile] = useState([]);
+  const [rules, setRules] = useState(null);
+
+  const handleRemoveFile = (index) => {
+    const updatedFiles = uploadedFile.filter((_, i) => i !== index);
+    setUploadedFile(updatedFiles); // Just updates the list, no input reset
+  };
 
   const handleFileUpload = async (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setUploadedFile(file.name);
-      // Handle file processing here
-      const formData = new FormData() 
-      formData.append('file', file);
-      try {
-        // Send the file to the backend
-        const response = await axios.post('http://127.0.0.1:8000/generateRules', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
+    const file=event.target.files
+    setUploadedFile([...uploadedFile, ...file]);
+    const files=[...uploadedFile, ...file];
   
-        // Handle the response from the backend
-        console.log(response)
-        console.log('File uploaded successfully:', response.data.message);
-      } catch (error) {
-        console.error('Error uploading file:', error);
-      }
-    }
+  files.forEach((file) => console.log("Uploaded file:", file.name));
+
+  const csvFile = files.find((file) => file.type === "text/csv");
+  const pdfFile = files.find((file) => file.type === "application/pdf");
+
+  // Check if both CSV and PDF are uploaded — then trigger API
+  console.log(file);
+  console.log(pdfFile);
+  if (csvFile && pdfFile) {
+    console.log("✅ Both files uploaded, sending to backend...");
+
+    const formData = new FormData();
+    formData.append("files", csvFile);
+    formData.append("files", pdfFile);
+    await axios.post('http://127.0.0.1:8000/generateRules', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          }).then((response) => {
+            console.log(response.data);
+            setRules(response.data["generated_rules"]);
+          });
+    
+  }
+    
+    // if (file) {
+    //   setUploadedFile(file.name);
+    //   // Handle file processing here
+    //   const formData = new FormData() 
+    //   formData.append('file', file);
+    //   try {
+    //     // Send the file to the backend
+    //     const response = await axios.post('http://127.0.0.1:8000/generateRules', formData, {
+    //       headers: {
+    //         'Content-Type': 'multipart/form-data',
+    //       },
+    //     });
+  
+    //     // Handle the response from the backend
+    //     console.log(response)
+    //     console.log('File uploaded successfully:', response.data.message);
+    //   } catch (error) {
+    //     console.error('Error uploading file:', error);
+    //   }
+    // }
   };
 
   return (
@@ -80,20 +114,34 @@ const GenerateRules = () => {
     >
       {/* Upload Dropbox */}
       <label>
-        <StyledUploadBox variant="outlined" sx={{ mb: 4 }}>
-          <CloudUpload fontSize="large" color="primary" sx={{ mb: 2 }} />
-          <Typography variant="h6" color="primary" gutterBottom>
-            {uploadedFile || "Drop files here or click to upload"}
-          </Typography>
-          <Typography variant="body2" color="textSecondary">
-            Supported formats: .pdf, .doc, .docx
-          </Typography>
-          <VisuallyHiddenInput
-            type="file"
-            accept=".pdf,.doc,.docx"
-            onChange={handleFileUpload}
-          />
-        </StyledUploadBox>
+      <StyledUploadBox variant="outlined" sx={{ mb: 4 }}>
+       <CloudUpload fontSize="large" color="primary" sx={{ mb: 2 }} />
+  <Typography variant="h6" color="primary" gutterBottom>
+  {uploadedFile.length > 0 ? (
+      uploadedFile.map((file, index) => (
+        <span
+          key={index}
+          onClick={() => handleRemoveFile(index)}
+          style={{ cursor: "pointer", color: "#1976D2", marginRight: "10px" }}
+        >
+          {file.name} ❌
+        </span>
+      ))
+    ) : (
+      "Drop files here or click to upload"
+    )}
+  </Typography>
+  <Typography variant="body2" color="textSecondary">
+    Supported formats: .pdf, .csv
+  </Typography>
+  <VisuallyHiddenInput
+    type="file"
+    accept=".pdf,.csv"
+    multiple  // ⭐️ Still supports multiple files
+    onChange={handleFileUpload}
+  />
+</StyledUploadBox>
+
       </label>
 
       {/* Content Grid */}
@@ -128,7 +176,7 @@ const GenerateRules = () => {
             </Typography>
             <Box sx={{ flex: 1, overflow: "auto" }}>
               <Typography color="textSecondary">
-                No rules generated yet
+                {rules ? rules : "Please upload files to generate rules"}
               </Typography>
             </Box>
           </Card>
