@@ -7,6 +7,7 @@ import Box from '@mui/material/Box';
 import { Card } from '@mui/material';
 import ResSummary from './ResSummary';
 import FlaggedEntries from './FlaggedEntries';
+import AnomalyDetection from './AnomalyDetection';
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -61,14 +62,18 @@ export default function MenuOption() {
       >
         <Tab label="Summary Of Score Document" {...a11yProps(0)} />
         <Tab label="Flagged Transactions" {...a11yProps(1)} />
+        <Tab label="Anomalies In Data" {...a11yProps(2)} />
       </Tabs>
 
-      <Card sx = {{flexBasis:"80%"}}>
+      <Card sx = {{flexBasis:"80%", boxShadow:"none !important"}}>
         <TabPanel value={value} index={0}>
             <ResSummary/>
         </TabPanel>
         <TabPanel value={value} index={1}>
             <FlaggedEntries/>
+        </TabPanel>  
+        <TabPanel value={value} index={2}>
+            <AnomalyDetection/>
         </TabPanel>      
       </Card>
     </Box>
