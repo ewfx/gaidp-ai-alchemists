@@ -15,8 +15,6 @@ import {
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import {ThreeDot} from 'react-loading-indicators';
-import DataProfilingRules from "../DataProfilingRules/DataProfilingRules ";
-
 const ChatAssistant = () => {
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState("");
@@ -76,7 +74,7 @@ const ChatAssistant = () => {
             (field.title && field.title !== ".") && ( // Check if title exists and is not '.'
     <div key={index} className="border rounded-lg p-4 shadow-md">
       <h3 className="text-sm text-blue-200 mb-2">
-  {`${field?.number !== 1 ? field.number - 1 : ""} ${field?.title?.replace(/\*\*/g, "") || ""}`}
+  {`${field?.title?.replace(/\*\*/g, "") || ""}`}
 </h3>
       <ul className="list-decimal pl-6 space-y-1">
         {field.rules.map((rule, idx) => (
