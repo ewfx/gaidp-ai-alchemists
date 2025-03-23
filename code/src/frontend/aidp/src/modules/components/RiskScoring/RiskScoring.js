@@ -4,7 +4,7 @@ import ResultPane from "./ResultPane"
 
 function RiskScoring(){
     return (
-        <Card sx = {{margin:"-24px",display:"flex"}}>
+        <Card sx = {{mx:"auto", p:3, display:"flex", boxShadow:"none !important"}}>
             <MenuOption/> 
         </Card>
     )

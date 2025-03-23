@@ -15,7 +15,7 @@ const UploadDocCsv = (props) => {
       setError('');
       setFile(selectedFile);
       const formData = new FormData() 
-      formData.append("file", file); // Append the file to the FormData object
+      formData.append("file", selectedFile); // Append the file to the FormData object
       try {
         // Send the file to the backend
         const response = await axios.post("http://127.0.0.1:8000/auditCustomerData", formData, {
@@ -28,13 +28,13 @@ const UploadDocCsv = (props) => {
         console.error("Error in processing the csv ", error);
       }
       // Read the CSV file
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const csvContent = e.target.result;
-        console.log('CSV Content:', csvContent);
-        // You can process the CSV content here (e.g., parse it into an array of objects)
-      };
-      reader.readAsText(selectedFile);
+      // const reader = new FileReader();
+      // reader.onload = (e) => {
+      //   const csvContent = e.target.result;
+      //   console.log('CSV Content:', csvContent);
+      //   // You can process the CSV content here (e.g., parse it into an array of objects)
+      // };
+      // reader.readAsText(selectedFile);
       props.onUpload(true)
 
     } else {
@@ -44,7 +44,7 @@ const UploadDocCsv = (props) => {
   };
 
   return (
-    <Card sx = {{display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"space-evenly", marginTop:"2%"}}>
+    <Card sx = {{display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"space-evenly", boxShadow:"none !important"}}>
       <h2>First Upload a CSV file for Scoring</h2>
       <Card sx={{bgcolor:"transparent", display:"flex", alignItems:"center", flexDirection:"column", borderRadius:"none !important", boxShadow:"none"}}>
         {/* <label for="file">choose a file</label> */}

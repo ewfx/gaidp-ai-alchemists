@@ -9,7 +9,7 @@ function ResSummary(){
     }
 
     return (
-        <Card sx={{margin:"-24px", borderRadius:"none !important", boxShadow:"none"}}>
+        <Card sx={{boxShadow:"none !important"}}>
 
             {!fileUploaded && <UploadDocCsv onUpload = {handleUpload}/>}
             {fileUploaded && 
