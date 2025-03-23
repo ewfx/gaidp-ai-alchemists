@@ -12,6 +12,8 @@ import {
   Card
 } from '@mui/material';
 import { CloudUpload } from '@mui/icons-material';
+import { ThreeDot } from 'react-loading-indicators';
+
 
 import axios from 'axios';
 const VisuallyHiddenInput = styled('input')({
@@ -43,6 +45,18 @@ const StyledUploadBox = styled(Paper)(({ theme }) => ({
 const GenerateRules = () => {
   const [uploadedFile, setUploadedFile] = useState([]);
   const [rules, setRules] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [fields, setFields] = useState([]);
+
+  const parseData = (data) => {
+    const sections = data.split(/\n\n/);
+    return sections.map((section, index) => {
+      const [titleLine, ...rules] = section.split("\n");
+      const title = titleLine.replace(/\d+\)/, "").trim();
+      const formattedRules = rules.map((r) => r.replace(/^[-•]\s*/, "").trim());
+      return { number: index + 1, title, rules: formattedRules };
+    });
+  };
 
   const handleRemoveFile = (index) => {
     const updatedFiles = uploadedFile.filter((_, i) => i !== index);
@@ -68,6 +82,7 @@ const GenerateRules = () => {
     const formData = new FormData();
     formData.append("files", csvFile);
     formData.append("files", pdfFile);
+    setIsLoading(true);
     await axios.post('http://127.0.0.1:8000/generateRules', formData, {
             headers: {
               'Content-Type': 'multipart/form-data',
@@ -75,6 +90,8 @@ const GenerateRules = () => {
           }).then((response) => {
             console.log(response.data);
             setRules(response.data["generated_rules"]);
+            setFields(parseData(response.data["generated_rules"]));
+            setIsLoading(false);
           });
     
   }
@@ -159,7 +176,7 @@ const GenerateRules = () => {
           },
         }}
       >
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12}>
           <Card
             variant="outlined"
             sx={{
@@ -176,30 +193,23 @@ const GenerateRules = () => {
             </Typography>
             <Box sx={{ flex: 1, overflow: "auto" }}>
               <Typography color="textSecondary">
-                {rules ? rules : "Please upload files to generate rules"}
-              </Typography>
-            </Box>
-          </Card>
-        </Grid>
-
-        <Grid item xs={12} md={6}>
-          <Card
-            variant="outlined"
-            sx={{
-              p: 3,
-              flex: 1,
-              display: "flex",
-              flexDirection: "column",
-              minHeight: 0,
-              borderRadius: "10px",
-            }}
-          >
-            <Typography variant="h6" gutterBottom>
-              Document Summary
-            </Typography>
-            <Box sx={{ flex: 1, overflow: "auto" }}>
-              <Typography color="textSecondary">
-                Document summary will appear here...
+                {isLoading ? <ThreeDot variant="pulsate" color="#d32f2f" size="medium" text="" textColor="" />: fields.length>0 ?   
+                    <div className="p-4 space-y-4">
+                    {fields &&
+                      fields.map((field, index) => (
+                      (field.title && field.title !== ".") && ( // Check if title exists and is not '.'
+              <div key={index} className="border rounded-lg p-4 shadow-md">
+                <h2 className="text-xl font-bold text-blue-600 mb-2">{`${index + 1}) ${field.title}`}</h2>
+                <ul className="list-decimal pl-6 space-y-1">
+                  {field.rules.map((rule, idx) => (
+                    <p key={idx} className="text-gray-700">{rule}</p>
+                  ))}
+                </ul>
+              </div>
+            )
+          ))}
+                  </div>
+                 : "Please upload files to generate rules"}
               </Typography>
             </Box>
           </Card>
