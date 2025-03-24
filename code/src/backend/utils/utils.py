@@ -5,6 +5,9 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_core.vectorstores import InMemoryVectorStore
 from langchain.prompts import PromptTemplate
+from openpyxl import Workbook, load_workbook
+from openpyxl.styles import PatternFill
+from openpyxl.comments import Comment
 import io
 import re
 
@@ -79,4 +82,44 @@ def process_llm_output(raw_data):
         formatted_output.append(f"{header} {content}")
     # Join everything into a clean output
     return '\n\n'.join(formatted_output)
+    
+def parse_violations(text):
+    violations = re.findall(r"Violation: (.+?)\nRemediation: (.+?)\n", text)
+    violation_exists = re.search(r"violation_exists: (\w+)", text).group(1)
+    risk_score = re.search(r"risk_score: (\d+)", text).group(1)
+    return{
+    "violations_data": [{"violation": v[0], "remediation": v[1]} for v in violations],
+    "violation_exists": violation_exists.lower() == "true",
+    "risk_score": risk_score
+}
+    
+def store_violations(df, responses, folder):
+    print("Generating Excel file with highlighted violations and comments for all rows...")
+    df.to_excel(f"{folder}/violations_output.xlsx", index=False)
+    wb = load_workbook(f"{folder}/violations_output.xlsx")
+    ws = wb.active
+    red_fill = PatternFill(start_color='FF0000', end_color='FF0000', fill_type='solid')
+
+    for response in responses:
+        row_idx = response['row_index']
+        violation = response['violations_data']['violations_data'][0]['violation']
+        remediation = response['violations_data']['violations_data'][0]['remediation']
+
+        if response['violations_data']['violation_exists']:
+            # Color the entire row red
+            for col_num in range(1, len(df.columns) + 1):
+                cell = ws.cell(row=row_idx + 1, column=col_num)
+                cell.fill = red_fill
+                print("cell filled")
+
+            # Add a comment with the single violation and remediation
+            comment_text = f"Violation: {violation}\nRemediation: {remediation}"
+            first_cell = ws.cell(row=row_idx + 1, column=1)
+            first_cell.comment = Comment(comment_text, "CheckerBot")
+
+    wb.save(f"{folder}/violations_output.xlsx")
+    print("Excel file generated with highlighted violations and comments for all rows!")
+
+
+    
     

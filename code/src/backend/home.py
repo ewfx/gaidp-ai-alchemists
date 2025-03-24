@@ -7,13 +7,14 @@ import io
 from PyPDF2 import PdfReader 
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel  # Import BaseModel from Pydantic
-from utils.utils import load_llm,load_data,get_column_names,extract_data_chunks,load_vector_store,get_document_embeddings,prompt_template,process_llm_output
+from utils.utils import load_llm,load_data,get_column_names,extract_data_chunks,load_vector_store,get_document_embeddings,prompt_template,process_llm_output,parse_violations,store_violations
 from langchain_ollama import OllamaEmbeddings
 import os
 from dotenv import load_dotenv
 from rule_generation_pipeline.graph_setup import build_graph
 from chat_pipeline import workflow
 from langchain_core.messages import HumanMessage
+import glob
 
 
 load_dotenv()
@@ -37,6 +38,9 @@ vector_store=None
 rules=None
 chatapp=None
 
+class TextInput(BaseModel):
+    text: str
+
 @app.on_event("startup")
 def startup_event():
     print("Loading models...")
@@ -49,7 +53,54 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # Ensure the folder exists
 
 @app.get("/getFlaggedCustomers")
 async def getFlaggedCustomers():
-    pass
+    global rules, chatapp
+    try:
+        if rules is None:
+            raise HTTPException(status_code=400, detail="Please generate rules first")
+        context_prompt = '''
+    Analyze the given  excel row  %s against the set of rules.
+    Task:
+    1. Identify any violations of the rules in row given.
+    2. Suggest remediations for each violation.
+    3. output a boolean indicating if any violation exists in the row.
+    4. generate a risk score between 0 and 100 based on the violations.
+    Ouput format:
+    Violation: <violation_description for all columns in the row>
+    Remediation: <remediation_description for all columns in the row>
+    violation_exists: <boolean>
+    risk_score: <risk_score>
+    Give output in output format
+    '''
+        csv_files = glob.glob(os.path.join("./temp", "*.csv"))
+        responses=[]
+        if len(csv_files) == 1:
+            csv_file = csv_files[0]
+            df=load_data(csv_file)
+            for i in range(len(df)):
+                meta_data={}
+                if i==0:
+                    continue
+                row=df.iloc[i]
+                input_messages = [HumanMessage(context_prompt % row)]
+                output = chatapp.invoke({"messages": input_messages}, {"configurable": {"thread_id": "abc123"}})
+                response_text = output["messages"][-1].content
+                meta_data["row_index"]=i
+                meta_data["violations_data"]=parse_violations(response_text)
+                meta_data["row"]=row.replace({np.nan: None}).to_dict()
+                responses.append(meta_data)
+            store_violations(df,responses,"./temp")
+            return {"message": "data flagged successfully", "data": responses}
+        elif len(csv_files) == 0:
+            raise HTTPException(status_code=400, detail="Please upload data file first")
+        else:
+            raise HTTPException(status_code=400, detail="Please upload only one data file")
+    
+        input_messages = [HumanMessage(context_prompt)]
+        output = chatapp.invoke({"messages": input_messages}, {"configurable": {"thread_id": "abc123"}})
+        response_text = output["messages"][-1].content
+        return {"message": "Text refined successfully", "refined_text": response_text}
+    except Exception as e:
+        return {"error": f"Failed to refine text: {str(e)}"}
 
 @app.post("/generateRules")
 async def process_files(files: list[UploadFile] = File(...)):
@@ -182,9 +233,6 @@ async def anomaly_detection():
 
     return {"message": "CSV processed successfully", "filename": "anomalies_data.csv"}
 
-class TextInput(BaseModel):
-    text: str
-
 @app.post("/refineRules")
 def refineRules(input_data: TextInput):
     global rules, chatapp
@@ -192,7 +240,12 @@ def refineRules(input_data: TextInput):
         if rules is None:
             raise HTTPException(status_code=400, detail="Please generate rules first")
         input_text = input_data.text  # Extract the input string
-        input_messages = [HumanMessage(input_text)]
+        context_prompt = f'''
+"You have a set of data profiling rules for certain columns. "
+{input_text}
+If the user request changes update and return all the rules along with unupdated ones.
+'''
+        input_messages = [HumanMessage(context_prompt)]
         output = chatapp.invoke({"messages": input_messages}, {"configurable": {"thread_id": "abc123"}})
         response_text = output["messages"][-1].content
         return {"message": "Text refined successfully", "refined_text": response_text}
