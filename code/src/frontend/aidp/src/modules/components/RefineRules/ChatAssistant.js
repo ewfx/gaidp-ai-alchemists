@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
-
+import {ThreeDot} from 'react-loading-indicators';
 const ChatAssistant = () => {
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState("");
@@ -26,6 +26,16 @@ const ChatAssistant = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const parseData = (data) => {
+    const sections = data.split(/\n\n/);
+    return sections.map((section, index) => {
+      const [titleLine, ...rules] = section.split("\n");
+      const title = titleLine.replace(/\d+\)/, "").trim();
+      const formattedRules = rules.map((r) => r.replace(/^[-•]\s*/, "").trim());
+      return { number: index + 1, title, rules: formattedRules };
+    });
+  };
+  
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
@@ -36,6 +46,8 @@ const ChatAssistant = () => {
     // Add user message
     const userMessage = { text: inputText, isBot: false };
     setMessages((prev) => [...prev, userMessage]);
+    const botMessage = { text:<ThreeDot variant="pulsate" color="#d32f2f" size="medium" text="" textColor="" /> , isBot: true };
+    setMessages((prev) => [...prev, botMessage]);
     setInputText("");
 
     try {
@@ -43,15 +55,50 @@ const ChatAssistant = () => {
       const response = await axios.post("http://127.0.0.1:8000/refineRules", {
         text: inputText,
         
-      });
+      }).then((response) => {
       console.log(response.data);
-  
-      // Add the bot's response to the chat
+      setMessages((prev) => prev.slice(0, prev.length - 1));
+      if(response.data.error!=null){
+        const botResponse = {
+          text: "Please generate rules first.",
+          isBot: true,
+        }
+        setMessages((prev) => [...prev, botResponse]);
+      }
+      else{
+        const fields = parseData(response.data.refined_text);
+        const botResponse = {
+          text:    <div className="p-4 space-y-4">
+          {fields &&
+            fields.map((field, index) => (
+            (field.title && field.title !== ".") && ( // Check if title exists and is not '.'
+    <div key={index} className="border rounded-lg p-4 shadow-md">
+      <h3 className="text-sm text-blue-200 mb-2">
+  {`${field?.title?.replace(/\*\*/g, "") || ""}`}
+</h3>
+      <ul className="list-decimal pl-6 space-y-1">
+        {field.rules.map((rule, idx) => (
+          <p key={idx} className="text-gray-200">{rule}</p>
+        ))}
+      </ul>
+    </div>
+  )
+))}
+        </div>,
+          isBot: true,
+        }
+        
+        setMessages((prev) => [...prev, botResponse]);
+      }
+     
+    }).catch((error) => {
       const botResponse = {
-        text: response.data.refined_text || "No response received.",
+        text: "Unkown error occured.",
         isBot: true,
-      };
+      }
       setMessages((prev) => [...prev, botResponse]);
+    });
+      
   
       // Finalize conversation on specific trigger
       if (inputText.toLowerCase().includes("finalize")) {
