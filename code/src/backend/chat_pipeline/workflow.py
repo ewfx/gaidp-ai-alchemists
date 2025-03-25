@@ -4,13 +4,7 @@ from langchain_core.messages import HumanMessage
 from chat_pipeline.call_model import call_model
 
 
-def create_workflow(input_text, llm):  # Pass llm into the function
-    
-    context_prompt = f'''
-"You have a set of data profiling rules for certain columns. "
-{input_text}
-If the user request changes update and return all the rules along with unupdated ones.
-'''
+def create_workflow(context_prompt, llm):  # Pass llm into the function
     config = {"configurable": {"thread_id": "abc123"}}
     
     workflow = StateGraph(state_schema=MessagesState)
