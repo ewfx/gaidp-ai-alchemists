@@ -82,7 +82,7 @@ const GenerateRules = () => {
     formData.append("files", csvFile);
     formData.append("files", pdfFile);
     setIsLoading(true);
-    await axios.post('http://127.0.0.1:8001/generateRules', formData, {
+    await axios.post('http://127.0.0.1:8000/generateRules', formData, {
             headers: {
               'Content-Type': 'multipart/form-data',
             },

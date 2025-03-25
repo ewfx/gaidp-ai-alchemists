@@ -72,7 +72,7 @@ const ChatAssistant = () => {
     try {
       // Send the user message to the bot's backend
       const response = await axios
-        .post("http://127.0.0.1:8001/refineRules", {
+        .post("http://127.0.0.1:8000/refineRules", {
           text: chatInputText,
         })
         .then((response) => {
