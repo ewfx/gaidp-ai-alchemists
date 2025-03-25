@@ -70,11 +70,11 @@ const GenerateRules = () => {
   
   files.forEach((file) => console.log("Uploaded file:", file.name));
 
-  const csvFile = files.find((file) => file.type === "text/csv");
+  const csvFile = files.find((file) => file.type === "text/csv" || file.type === "application/vnd.ms-excel");
   const pdfFile = files.find((file) => file.type === "application/pdf");
 
   // Check if both CSV and PDF are uploaded — then trigger API
-  console.log(file);
+  console.log(files);
   console.log(pdfFile);
   if (csvFile && pdfFile) {
     console.log("✅ Both files uploaded, sending to backend...");

@@ -54,8 +54,8 @@ export default function SingleFlagTranData({ rowIndex, row }) {
 
   return (
     <div>
-      <Accordion expanded={expanded === "panel1"} onChange={handleChange("panel1")}>
-        <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
+      <Accordion expanded={expanded === `panel${rowIndex}`} onChange={handleChange(`panel${rowIndex}`)}>
+        <AccordionSummary aria-controls={`panel${rowIndex}d-content`} id={`panel${rowIndex}d-header`}>
           <Typography component="span">
             🚨 Row {rowIndex + 1}
           </Typography>
@@ -68,21 +68,20 @@ export default function SingleFlagTranData({ rowIndex, row }) {
             <strong>🚩 Flagged Reason:</strong>
             {row?.violations_data?.violation_exists ? (
               <ul>
-                {Array.isArray(row.violations_data.violations_data) && (
-                  row.violations_data.violations_data.map((v, index) => (
-                    <p key={index}>
-                      <strong>❌ Violation:</strong> {v.violation}
-                      <br />
-                      <strong>🛠️ Remediation:</strong> {v.remediation}
-                    </p>
-                  ))
-                )  }
+                {Object.entries(row.violations_data.violations).map(([field, reason], index) => (
+                  <li key={index}><strong>{field}:</strong> {reason}</li>
+                ))}
               </ul>
             ) : (
-              <Typography>No violations detected 🎉</Typography>
+              <span>No violations detected.</span>
             )}
-            <hr />
-
+            <br />
+            <strong>🛠️ Suggested Remediation:</strong>
+            <ul>
+              {Object.entries(row.violations_data.remediations).map(([field, fix], index) => (
+                <li key={index}><strong>{field}:</strong> {fix}</li>
+              ))}
+            </ul>
             {/* Row Data as Table Section */}
             <strong>📌 Row Details:</strong>
             <TableContainer component={Paper} sx={{ marginTop: "10px" }}>

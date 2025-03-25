@@ -69,7 +69,33 @@ async def getFlaggedCustomers():
     Remediation: <remediation_description for all columns in the row>
     violation_exists: <boolean>
     risk_score: <risk_score>
-    Give output in output format
+    
+    example output: 
+Violation: Customer ID: Invalid format, contains a decimal and is not a string.
+Violation: Industry Code: Potentially valid, requires NAICS/SIC/GICS lookup verification.
+Violation: Taxpayer ID (TIN): Invalid format.
+Violation: CUSIP: Invalid format.
+Violation: Interest Rate: Invalid format, should be a decimal.
+Violation: Credit Facility Type: Invalid format, should be an integer.
+Violation: Credit Facility Purpose: Invalid format, should be an integer.
+Violation: Collateral Type: Invalid format, should be an integer.
+Violation: Syndicated Loan Flag: Invalid format, should be an integer.
+Violation: Disposition Flag: Invalid format, should be an integer.
+Remediation: Customer ID: Remove the decimal and convert to string.
+Remediation: Industry Code: Verify the code against NAICS/SIC/GICS databases.
+Remediation: Taxpayer ID (TIN): Ensure the format matches the requirements.
+Remediation: CUSIP: Ensure the format matches the requirements.
+Remediation: Interest Rate: Convert to decimal format (e.g., 0.018).
+Remediation: Credit Facility Type: Convert to integer based on the predefined codes.
+Remediation: Credit Facility Purpose: Convert to integer based on the predefined codes.
+Remediation: Collateral Type: Convert to integer based on the predefined codes.
+Remediation: Syndicated Loan Flag: Convert to integer based on the predefined codes.
+Remediation: Disposition Flag: Convert to integer based on the predefined codes.
+violation_exists: True
+risk_score: 80
+
+Give output exactly in same format as example output.
+    
     '''
         csv_files = glob.glob(os.path.join("./temp", "*.csv"))
         responses=[]
@@ -77,13 +103,14 @@ async def getFlaggedCustomers():
             csv_file = csv_files[0]
             df=load_data(csv_file)
             for i in range(len(df)):
-                meta_data={}
                 if i==0:
                     continue
+                meta_data={}
                 row=df.iloc[i]
                 input_messages = [HumanMessage(context_prompt % row)]
                 output = chatapp.invoke({"messages": input_messages}, {"configurable": {"thread_id": "abc123"}})
                 response_text = output["messages"][-1].content
+                print("response_text",response_text)
                 meta_data["row_index"]=i
                 meta_data["violations_data"]=parse_violations(response_text)
                 meta_data["row"]=row.replace({np.nan: None}).to_dict()
@@ -94,11 +121,6 @@ async def getFlaggedCustomers():
             raise HTTPException(status_code=400, detail="Please upload data file first")
         else:
             raise HTTPException(status_code=400, detail="Please upload only one data file")
-    
-        input_messages = [HumanMessage(context_prompt)]
-        output = chatapp.invoke({"messages": input_messages}, {"configurable": {"thread_id": "abc123"}})
-        response_text = output["messages"][-1].content
-        return {"message": "Text refined successfully", "refined_text": response_text}
     except Exception as e:
         return {"error": f"Failed to refine text: {str(e)}"}
 
@@ -251,6 +273,14 @@ If the user request changes update and return all the rules along with unupdated
         return {"message": "Text refined successfully", "refined_text": response_text}
     except Exception as e:
         return {"error": f"Failed to refine text: {str(e)}"}
+
+@app.get("/downloadFlaggedFile")
+async def download_file():
+    file_path = "./temp/violations_output.xlsx"
+    if os.path.exists(file_path):
+        return FileResponse(path=file_path, filename="violations_output.xlsx", media_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    else:
+        raise HTTPException(status_code=404, detail="File not found")
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000)
