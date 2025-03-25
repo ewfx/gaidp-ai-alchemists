@@ -69,30 +69,53 @@ const GenerateRules = () => {
     setUploadedFiles([...uploadedFiles, ...file]);
     const files=[...uploadedFiles, ...file];
 
-    const csvFile = files.find((file) => file.type === "text/csv");
+    const csvFile = files.find((file) => file.type === "text/csv" || file.type === "application/vnd.ms-excel");
     const pdfFile = files.find((file) => file.type === "application/pdf");
 
-    if (csvFile && pdfFile) {
-      const formData = new FormData();
-      formData.append("files", csvFile);
-      formData.append("files", pdfFile);
-      
-      setIsLoading(true);
-      try {
-        const response = await axios.post(
-          "http://127.0.0.1:8001/generateRules", 
-          formData, 
-          { headers: { "Content-Type": "multipart/form-data" } }
-        );
-        
-        const parsedData = parseData(response.data["generated_rules"]);
-        setGeneratedRules(parsedData);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-  };
+  // Check if both CSV and PDF are uploaded — then trigger API
+  console.log(files);
+  console.log(pdfFile);
+  if (csvFile && pdfFile) {
+    console.log("✅ Both files uploaded, sending to backend...");
 
+    const formData = new FormData();
+    formData.append("files", csvFile);
+    formData.append("files", pdfFile);
+    setIsLoading(true);
+    await axios.post('http://127.0.0.1:8001/generateRules', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          }).then((response) => {
+            console.log(response.data);
+            // setGeneratedRules(response.data["generated_rules"]);
+            setGeneratedRules(parseData(response.data["generated_rules"]));
+            setIsLoading(false);
+          });
+    
+  }
+    
+    // if (file) {
+    //   setUploadedFile(file.name);
+    //   // Handle file processing here
+    //   const formData = new FormData() 
+    //   formData.append('file', file);
+    //   try {
+    //     // Send the file to the backend
+    //     const response = await axios.post('http://127.0.0.1:8000/generateRules', formData, {
+    //       headers: {
+    //         'Content-Type': 'multipart/form-data',
+    //       },
+    //     });
+  
+    //     // Handle the response from the backend
+    //     console.log(response)
+    //     console.log('File uploaded successfully:', response.data.message);
+    //   } catch (error) {
+    //     console.error('Error uploading file:', error);
+    //   }
+    // }
+  };
 
   return (
     <Box
