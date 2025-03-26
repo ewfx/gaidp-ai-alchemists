@@ -60,19 +60,16 @@ export default function MenuOption() {
         aria-label="Vertical tabs example"
         sx={{ borderRight: 1, borderColor: 'divider', flexBasis:"20%" }}
       >
-        <Tab label="Summary Of Score Document" {...a11yProps(0)} />
+        <Tab label="Anomailes in Data" {...a11yProps(0)} />
         <Tab label="Flagged Transactions" {...a11yProps(1)} />
-        <Tab label="Anomalies In Data" {...a11yProps(2)} />
+        
       </Tabs>
 
       <Card sx = {{flexBasis:"80%", boxShadow:"none !important"}}>
         <TabPanel value={value} index={0}>
-            <ResSummary/>
-        </TabPanel>
-        <TabPanel value={value} index={1}>
             <FlaggedEntries/>
         </TabPanel>  
-        <TabPanel value={value} index={2}>
+        <TabPanel value={value} index={1}>
             <AnomalyDetection/>
         </TabPanel>      
       </Card>

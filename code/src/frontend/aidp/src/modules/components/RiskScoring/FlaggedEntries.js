@@ -9,7 +9,7 @@ function FlaggedEntries(){
     }
     
     return (
-        <Card sx={{margin:"-24px", borderLeft:"1px solid red"}}>
+        <Card sx={{margin:"-24px", boxShadow:"none"}}>
 
             {!fileUploaded && <UploadDocCsv onUpload = {handleUpload}/>}
             {fileUploaded && 
