@@ -17,12 +17,7 @@
 In the modern data-driven landscape, ensuring data quality and detecting anomalies are critical tasks for organizations. This project leverages Generative AI to automate the creation of data profiling rules, simplifying data governance and enhancing anomaly detection. By integrating AI-powered rule generation, anomaly detection, and intelligent transaction flagging, we aim to streamline data management processes.
 
 ## 🎥 Demo
-🔗 [Live Demo](#) (if applicable)  
-📹 [Video Demo](https://github.com/ewfx/gaidp-ai-alchemists/blob/main/artifacts/demo/gaidp_ai_alchemists_demo_video.mp4) (if applicable)  
-
-🖼️ Screenshots:
-
-![Screenshot 1](link-to-image)
+📹 [Video Demo](https://github.com/ewfx/gaidp-ai-alchemists/blob/main/artifacts/demo/gaidp_ai_alchemists_demo_video.mp4)
 
 ## Results
  [Result Data](https://github.com/ewfx/gaidp-ai-alchemists/tree/main/artifacts/results)
