@@ -195,14 +195,8 @@ async def process_csv(file: UploadFile = File(...)):
                 f.write(chunk)
         print(f"File saved at: {file_path}")
 
-        # Read the uploaded file
-        #contents = await file.read()
-        
-        # Load the CSV into a pandas DataFrame
-        #df = pd.read_csv(io.BytesIO(contents))
         df = pd.read_csv(file_path)
         
-        # # Example: Perform some processing on the DataFrame
         print("CSV Data:")
         print(df.head())  # Print the first few rows of the DataFrame
         
