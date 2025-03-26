@@ -1,0 +1,184 @@
+Generated Rules
+1) Customer ID:
+- --Format:-- Must not contain carriage returns, line feeds, commas, or unprintable characters.
+
+- --Uniqueness:-- The Customer ID should be unique within the dataset.
+
+2) Internal Obligor ID:
+- --Format:-- Must not contain carriage returns, line feeds, commas, or unprintable characters.
+
+- --Uniqueness:-- The Internal Obligor ID should be unique within the dataset.
+
+3) Obligor Name:
+- --Format:-- Must not contain carriage returns, line feeds, commas, or unprintable characters.
+
+- --Nullability:-- If the borrowing entity is an individual(s) (Natural Person(s)), the value should be "Individual." Otherwise, it should contain the full legal corporate name.
+
+4) City:
+- --Format:-- Free text, but should contain a valid city name.
+
+5) Country:
+- --Format:-- Must use the 2-letter Country Code (ISO 3166-1 alpha-
+
+7) Industry Code:
+- --Format:-- Should be a 4 to 6 digit numeric code. If NAICS code is unavailable, SIC or GICS industry code should be provided.
+
+- --Consistency:-- The Industry Code and Industry Code Type should be consistent with each other.
+
+8) Internal Risk Rating:
+- --Format:-- Free text, indicating the obligor rating grade.
+
+- --Consistency:-- Should be consistent with Schedule H.4 (Internal Risk Rating Schedule), Field 1.
+
+9) Taxpayer ID (TIN):
+- --Format:-- The 9-digit identification assigned by the Internal Revenue Service for the obligor, in the format ##-####### or ######### or 'NA'.
+
+- --Nullability:-- If the borrowing entity is an individual(s) (Natural Person(s)), the value should be 'NA'. If the borrowing entity does not have a TIN, the value should be 'NA'.
+
+10) Stock Exchange:
+- --Format:-- Free text, indicating the name of the Stock Exchange.
+
+- --Nullability:-- If the borrowing entity is not publicly traded, the value should be 'NA'.
+
+11) Ticker Symbol:
+- --Format:-- Free text, indicating the Stock Symbol.
+
+- --Nullability:-- If the borrowing entity is not publicly traded, the value should be 'NA'.
+
+12) CUSIP:
+- --Format:-- Must be a valid 6-digit CUSIP number issued by the CUSIP Service Bureau or 'NA'.
+
+13) Internal Credit Facility ID:
+- --Format:-- Must not contain carriage returns, line feeds, commas, or unprintable characters.
+
+- --Uniqueness:-- Must be unique within a submission and over time.
+
+14) Origination Date:
+- --Format:-- Must be in yyyy-mm-dd format.
+
+- --Validity:-- Must be before or equal to the period end date of the data.
+
+15) Maturity Date:
+- --Format:-- Must be in yyyy-mm-dd format.
+
+- --Validity:-- The Maturity Date should be greater than or equal to the Origination Date.
+
+16) Credit Facility Type:
+- --Values:-- Must be one of the predefined codes (0-
+
+17) . If "Other" (
+18) , then Field 21 (Other Credit Facility Type Description) must be populated.
+19) Credit Facility Purpose:
+- --Values:-- Must be one of the predefined codes (0-
+
+20) . If "Other" (
+21) , then Field 23 (Other Credit Facility Purpose Description) must be populated.
+22) Loan Amount:
+- --Format--: Rounded whole dollar amount.
+
+- --Validity--: Should be a positive numerical value.
+
+23) Outstanding Balance:
+- --Format--: Rounded whole dollar amount.
+
+- --Validity--: Should be a non-negative numerical value. The Outstanding Balance should be less than or equal to the Loan Amount.
+
+24) Interest Rate:
+- --Format:-- Provide as a decimal (e.g., 0.0575 for 5.75%).
+
+- --Nullability:-- Enter 'NA' if the facility is entirely fee based.
+
+- --Validity--: Should be a non-negative numerical value.
+
+25) Collateral Type:
+- --Values:-- Should be one of the predefined codes (0-
+
+27) Loan Status:
+- --Values--: Should be one of the predefined loan status values.
+
+28) Payment Frequency:
+- --Values--: Should be one of the predefined payment frequency options.
+
+29) Currency:
+- --Format:-- Use the relevant three-letter ISO 4217 currency code.
+
+- --Values:-- Should be a valid currency code.
+
+30) Loan Grade:
+- --Format--: Free text, indicating the loan grade.
+
+31) Syndicated Loan Flag:
+- --Values:-- Must be one of the predefined options (0-
+
+33) Disposition Flag:
+- --Values:-- Must be one of the predefined options (0-
+
+35) Guarantor ID:
+- --Format:-- Must not contain carriage returns, line feeds, commas, or unprintable characters.
+
+- --Nullability:-- If the credit facility is not guaranteed, enter 'NA'.
+
+36) Guarantor Name:
+- --Format:-- Must not contain carriage returns, line feeds, commas, or unprintable characters.
+
+- --Nullability:-- If the guarantor is an individual(s) (Natural Person (s)), do not report the name; instead substitute with the text: "Individual." If the credit facility is not guaranteed, enter 'NA'.
+
+37) Guarantor Rating:
+- --Format:-- Free text, indicating the obligor rating grade.
+
+- --Nullability:-- If the credit facility is not guaranteed or if the guarantor does not have a rating, enter 'NA'.
+
+38) Loan to Value Ratio:
+- --Format--: Express as a decimal.
+
+- --Validity--: Should be a non-negative numerical value.
+
+39) Debt Service Coverage Ratio:
+- --Format--: Express as a decimal.
+
+- --Validity--: Should be a non-negative numerical value.
+
+40) Total Assets:
+- --Format--: Rounded whole dollar amount.
+
+- --Validity--: Should be a non-negative numerical value.
+
+41) Total Liabilities:
+- --Format--: Rounded whole dollar amount.
+
+- --Validity--: Should be a non-negative numerical value.
+
+42) EBITDA:
+- --Format--: Rounded whole dollar amount.
+
+- --Validity--: Should be a numerical value.
+
+43) Net Income:
+- --Format--: Rounded whole dollar amount.
+
+- --Validity--: Should be a numerical value.
+
+44) Total Revenue:
+- --Format--: Rounded whole dollar amount.
+
+- --Validity--: Should be a non-negative numerical value.
+
+45) Total Equity:
+- --Format--: Rounded whole dollar amount.
+
+- --Validity--: Should be a non-negative numerical value.
+
+46) Cash Flow:
+- --Format--: Rounded whole dollar amount.
+
+- --Validity--: Should be a numerical value.
+
+47) Interest Coverage Ratio:
+- --Format--: Express as a decimal.
+
+- --Validity--: Should be a non-negative numerical value.
+
+48) Loan Default Probability:
+- --Format--: Express as a decimal.
+
+- --Validity--: Should be a numerical value between 0 and 1 (inclusive).
