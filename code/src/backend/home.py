@@ -48,8 +48,9 @@ def startup_event():
     embedding_model=OllamaEmbeddings(model="nomic-embed-text")
     llm=load_llm("google","gemini-2.0-flash-lite",api_key=os.getenv("GOOGLE_API_KEY") )
     vector_store=load_vector_store(embedding_model)
-UPLOAD_FOLDER = "../regulatory_files"  # Directory to store uploaded files
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # Ensure the folder exists
+
+# "./temp" = "../regulatory_files"  # Directory to store uploaded files
+os.makedirs("./temp", exist_ok=True)  # Ensure the folder exists
 
 @app.get("/getFlaggedCustomers")
 async def getFlaggedCustomers():
@@ -175,7 +176,7 @@ async def process_files(files: list[UploadFile] = File(...)):
 
 @app.get("/download/{filename}")
 async def download_file(filename: str):
-    file_path = os.path.join(UPLOAD_FOLDER, filename)
+    file_path = os.path.join("./temp", filename)
     print("file path", file_path)
     # Check if the file exists
     if not os.path.exists(file_path):
@@ -187,7 +188,7 @@ async def download_file(filename: str):
 @app.post("/auditCustomerData")
 async def process_csv(file: UploadFile = File(...)):
     try:
-        file_path = os.path.join(UPLOAD_FOLDER, file.filename)
+        file_path = os.path.join("./temp", file.filename)
 
         # Save the uploaded file before reading
         with open(file_path, "wb") as f:
@@ -206,7 +207,11 @@ async def process_csv(file: UploadFile = File(...)):
 
 @app.get("/getAnomalyDetection")
 async def anomaly_detection():
-    file_path = os.path.join(UPLOAD_FOLDER, "H1_5000.csv")
+    for root, dirs, files in os.walk("./temp"):
+        for file in files:
+            if file.endswith(".csv"):
+                file_path = os.path.join(root, file)
+    
     data = pd.read_csv(file_path)
     unique_id_columns = ['Customer ID', 'Internal Obligor ID']  # Add all unique ID columns
     relevant_columns = unique_id_columns + [
@@ -239,11 +244,11 @@ async def anomaly_detection():
     print("anomaly data", anomalies_iso_data[:100])
 
     # Save anomalies with unique IDs
-    file_path_for_data_with_anomalies = os.path.join(UPLOAD_FOLDER, "anomalies_data.csv")
+    file_path_for_data_with_anomalies = os.path.join("./temp", "anomalies_data.csv")
     anomalies_iso_data.to_csv(file_path_for_data_with_anomalies, index=False)
 
     #save data without anomalies for risk scoring 
-    file_path_for_data_without_anomalies = os.path.join(UPLOAD_FOLDER, "data_for_risk_scoring.csv")
+    file_path_for_data_without_anomalies = os.path.join("./temp", "data_for_risk_scoring.csv")
     risk_scoring_data.to_csv(file_path_for_data_without_anomalies, index=False)
 
 
