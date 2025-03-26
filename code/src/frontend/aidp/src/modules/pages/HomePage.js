@@ -1,18 +1,17 @@
-import { Box } from "@mui/material"
-import ContentPanel from "../components/ContentPanel"
-import Footer from "../components/Footer"
-import Header from "../components/Header"
+import { Box } from "@mui/material";
+import { AppProvider } from "modules/context-api/AppContext";
+import ContentPanel from "../components/ContentPanel";
 
-function HomePage(){
-    return (
-        <Box sx = {{display:"flex", flexDirection:"column", alignItems:"center"
-        // ,marginTop:'15vh'
-        }}>
-            {/* <Header/> */}
-            <ContentPanel/>
-            {/* <Footer/> */}
-        </Box>       
-    )
+function HomePage() {
+  return (
+    <AppProvider>
+      <Box
+        sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+      >
+        <ContentPanel />
+      </Box>
+    </AppProvider>
+  );
 }
 
-export default HomePage
+export default HomePage;

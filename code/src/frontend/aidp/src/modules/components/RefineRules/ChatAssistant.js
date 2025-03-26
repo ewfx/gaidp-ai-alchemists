@@ -14,67 +14,143 @@ import {
 } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
-
+import { ThreeDot } from "react-loading-indicators";
+import { useAppContext } from "modules/context-api/AppContext";
 const ChatAssistant = () => {
-  const [messages, setMessages] = useState([]);
-  const [inputText, setInputText] = useState("");
-  const [isConversationEnded, setIsConversationEnded] = useState(false);
-  const [updatedRules, setUpdatedRules] = useState([]);
+  const {
+    chatMessages,
+    setChatMessages,
+    chatInputText,
+    setChatInputText,
+    chatConversationEnded,
+    setChatConversationEnded,
+    chatUpdatedRules,
+    setChatUpdatedRules,
+  } = useAppContext();
+
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const parseData = (data) => {
+    const sections = data.split(/\n\n/);
+    return sections.map((section, index) => {
+      const [titleLine, ...rules] = section.split("\n");
+      const title = titleLine.replace(/\d+\)/, "").trim();
+      const formattedRules = rules.map((r) => r.replace(/^[-•]\s*/, "").trim());
+      return { number: index + 1, title, rules: formattedRules };
+    });
+  };
+
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [chatMessages]);
 
   const handleSendMessage = async () => {
-    if (!inputText.trim() || isConversationEnded) return;
+    if (!chatInputText.trim() || chatConversationEnded) return;
 
     // Add user message
-    const userMessage = { text: inputText, isBot: false };
-    setMessages((prev) => [...prev, userMessage]);
-    setInputText("");
+    const userMessage = { text: chatInputText, isBot: false };
+    setChatMessages((prev) => [...prev, userMessage]);
+    const botMessage = {
+      text: (
+        <ThreeDot
+          variant="pulsate"
+          color="#d32f2f"
+          size="medium"
+          text=""
+          textColor=""
+        />
+      ),
+      isBot: true,
+    };
+    setChatMessages((prev) => [...prev, botMessage]);
+    setChatInputText("");
 
     try {
       // Send the user message to the bot's backend
-      const response = await axios.post("http://127.0.0.1:8000/refineRules", {
-        text: inputText,
-        
-      });
-      console.log(response.data);
-  
-      // Add the bot's response to the chat
-      const botResponse = {
-        text: response.data.refined_text || "No response received.",
-        isBot: true,
-      };
-      setMessages((prev) => [...prev, botResponse]);
-  
+      const response = await axios
+        .post("http://127.0.0.1:8000/refineRules", {
+          text: chatInputText,
+        })
+        .then((response) => {
+          console.log(response.data);
+          setChatMessages((prev) => prev.slice(0, prev.length - 1));
+
+          if (response.data.error != null) {
+            const botResponse = {
+              text: "Please generate rules first.",
+              isBot: true,
+            };
+            setChatMessages((prev) => [...prev, botResponse]);
+          } else {
+            const fields = parseData(response.data.refined_text);
+            const botResponse = {
+              text: (
+                <div className="p-4 space-y-4">
+                  {fields &&
+                    fields.map(
+                      (field, index) =>
+                        field.title &&
+                        field.title !== "." && ( // Check if title exists and is not '.'
+                          <div
+                            key={index}
+                            className="border rounded-lg p-4 shadow-md"
+                          >
+                            <h3 className="text-sm text-blue-200 mb-2">
+                              {`${field?.title?.replace(/\*\*/g, "") || ""}`}
+                            </h3>
+                            <ul className="list-decimal pl-6 space-y-1">
+                              {field.rules.map((rule, idx) => (
+                                <p key={idx} className="text-gray-200">
+                                  {rule}
+                                </p>
+                              ))}
+                            </ul>
+                          </div>
+                        )
+                    )}
+                </div>
+              ),
+              isBot: true,
+            };
+
+            setChatMessages((prev) => [...prev, botResponse]);
+          }
+        })
+        .catch((error) => {
+          const botResponse = {
+            text: "Unkown error occured.",
+            isBot: true,
+          };
+          setChatMessages((prev) => [...prev, botResponse]);
+        });
+
       // Finalize conversation on specific trigger
-      if (inputText.toLowerCase().includes("finalize")) {
+      if (chatInputText.toLowerCase().includes("finalize")) {
         const finalResponse = {
           text: "Conversation finalized. Here are the updated compliance rules:",
           isBot: true,
           isFinal: true,
         };
-        setMessages((prev) => [...prev, finalResponse]);
-        setIsConversationEnded(true);
-        setUpdatedRules([
+        setChatMessages((prev) => [...prev, finalResponse]);
+        setChatConversationEnded(true);
+        setChatUpdatedRules([
           "Updated Data Protection Policy v2.1",
           "Revised Privacy Compliance Standard 4.3",
           "New Financial Regulation Implementation Guide",
         ]);
       }
+
     } catch (error) {
       console.error("Error communicating with the bot:", error);
       const errorResponse = {
         text: "Sorry, there was an error processing your request.",
         isBot: true,
       };
-      setMessages((prev) => [...prev, errorResponse]);
+      setChatMessages((prev) => [...prev, errorResponse]);
     }
   };
 
@@ -90,10 +166,10 @@ const ChatAssistant = () => {
 
         <Paper
           variant="outlined"
-          sx={{ height: "30vh", overflow: "auto", mb: 2, p: 1 }}
+          sx={{ minHeight: "30vh", overflow: "auto", mb: 2, p: 1 }}
         >
           <List sx={{ p: 0 }}>
-            {messages.map((msg, index) => (
+            {chatMessages.map((msg, index) => (
               <ListItem
                 key={index}
                 sx={{
@@ -151,9 +227,9 @@ const ChatAssistant = () => {
                           color="primary"
                           startIcon={<Refresh />}
                           onClick={() => {
-                            setIsConversationEnded(false);
-                            setMessages([]);
-                            setUpdatedRules([]);
+                            setChatConversationEnded(false);
+                          setChatMessages([]);
+                          setChatUpdatedRules([]);
                           }}
                           sx={{
                             borderRadius: "20px",
@@ -174,19 +250,19 @@ const ChatAssistant = () => {
           </List>
         </Paper>
 
-        {!isConversationEnded ? (
+        {!chatConversationEnded ? (
           <Stack direction="row" spacing={1} alignItems="flex-end">
             <TextField
               fullWidth
               multiline
               rows={1}
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
+              value={chatInputText}
+              onChange={(e) => setChatInputText(e.target.value)}
               onKeyPress={(e) =>
                 e.key === "Enter" && !e.shiftKey && handleSendMessage()
               }
               placeholder="Type your message..."
-              disabled={isConversationEnded}
+              disabled={chatConversationEnded}
               variant="outlined"
               sx={{
                 "& .MuiOutlinedInput-root": {
@@ -199,7 +275,7 @@ const ChatAssistant = () => {
               variant="contained"
               color="primary"
               onClick={handleSendMessage}
-              disabled={!inputText.trim() || isConversationEnded}
+              disabled={!chatInputText.trim() || chatConversationEnded}
               endIcon={<Send />}
               sx={{
                 height: "56px",
@@ -224,7 +300,7 @@ const ChatAssistant = () => {
               Final Compliance Rules
             </Typography>
             <List dense sx={{ mb: 3 }}>
-              {updatedRules.map((rule, index) => (
+              {chatUpdatedRules.map((rule, index) => (
                 <ListItem key={index} sx={{ py: 0.5 }}>
                   <ListItemText
                     primary={`• ${rule}`}
