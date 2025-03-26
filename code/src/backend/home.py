@@ -99,7 +99,7 @@ Give output exactly in same format as example output.
     '''
         csv_files = glob.glob(os.path.join("./temp", "*.csv"))
         responses=[]
-        if len(csv_files) == 1:
+        if len(csv_files) >= 1:
             csv_file = csv_files[0]
             df=load_data(csv_file)
             for i in range(len(df)):
