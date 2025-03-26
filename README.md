@@ -19,12 +19,13 @@ In the modern data-driven landscape, ensuring data quality and detecting anomali
 ## 🎥 Demo
 🔗 [Live Demo](#) (if applicable)  
 📹 [Video Demo](https://github.com/ewfx/gaidp-ai-alchemists/blob/main/artifacts/demo/gaidp_ai_alchemists_demo_video.mp4) (if applicable)  
+
 🖼️ Screenshots:
 
 ![Screenshot 1](link-to-image)
 
 ## Results
- [Result Data](#)
+ [Result Data](https://github.com/ewfx/gaidp-ai-alchemists/tree/main/artifacts/results)
 
 
 ## 💡 Inspiration
@@ -129,7 +130,7 @@ Ensure you have the following installed on your system:
 
 ## 🏗️ Tech Stack
  🔹 Frontend: React 
- 🔹 Backend: Node.js / FastAPI 
+ 🔹 Backend: FastAPI 
  🔹 Other: Gemini API 
 
 ## 👥 Team
