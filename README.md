@@ -18,10 +18,14 @@ In the modern data-driven landscape, ensuring data quality and detecting anomali
 
 ## 🎥 Demo
 🔗 [Live Demo](#) (if applicable)  
-📹 [Video Demo](#) (if applicable)  
+📹 [Video Demo](https://github.com/ewfx/gaidp-ai-alchemists/blob/main/artifacts/demo/gaidp_ai_alchemists_demo_video.mp4) (if applicable)  
 🖼️ Screenshots:
 
 ![Screenshot 1](link-to-image)
+
+## Results
+ [Result Data](#)
+
 
 ## 💡 Inspiration
 The inspiration behind this project stems from the increasing complexity of data ecosystems. Traditional data profiling methods often require extensive manual effort and domain expertise, leading to inconsistencies and inefficiencies. Our goal is to empower users with an intuitive, AI-assisted platform that automates rule creation, identifies anomalies, and provides actionable insights — all without deep technical expertise.
@@ -129,7 +133,7 @@ Ensure you have the following installed on your system:
  🔹 Other: Gemini API 
 
 ## 👥 Team
-- **Nikitha** - [GitHub](#) | [LinkedIn](#)
-- **Mahendar** - [GitHub](#) | [LinkedIn](#)
-- **Maruthi** - [GitHub](#) | [LinkedIn](#)
-- **Prabakaran** - [GitHub](#) | [LinkedIn](#)
+- **Nikitha** - [GitHub](https://github.com/Nikhitha2820) | [LinkedIn](https://www.linkedin.com/in/sai-nikhitha-reddy-13ab45234/)
+- **Mahendar** - [GitHub](https://github.com/MAHENDAR16) | [LinkedIn](https://www.linkedin.com/in/mahendar-p-416504253/)
+- **Maruthi** - [GitHub](https://github.com/maruthisriram) | [LinkedIn](https://www.linkedin.com/in/maruthi-sriram-rachapudi-501a971b9/)
+- **Prabakaran** - [GitHub](https://github.com/Prabakaran2712) | [LinkedIn](https://www.linkedin.com/in/prabakaran2712/)
