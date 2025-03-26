@@ -124,9 +124,9 @@ Ensure you have the following installed on your system:
 ---
 
 ## 🏗️ Tech Stack
-- 🔹 Frontend: React 
-- 🔹 Backend: Node.js / FastAPI 
-- 🔹 Other: Gemini API 
+ 🔹 Frontend: React 
+ 🔹 Backend: Node.js / FastAPI 
+ 🔹 Other: Gemini API 
 
 ## 👥 Team
 - **Nikitha** - [GitHub](#) | [LinkedIn](#)
