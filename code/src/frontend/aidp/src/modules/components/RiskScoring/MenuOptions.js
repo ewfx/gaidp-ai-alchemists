@@ -66,10 +66,10 @@ export default function MenuOption() {
       </Tabs>
 
       <Card sx = {{flexBasis:"80%", boxShadow:"none !important"}}>
-        <TabPanel value={value} index={0}>
+        <TabPanel value={value} index={1}>
             <FlaggedEntries/>
         </TabPanel>  
-        <TabPanel value={value} index={1}>
+        <TabPanel value={value} index={0}>
             <AnomalyDetection/>
         </TabPanel>      
       </Card>
