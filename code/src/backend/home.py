@@ -100,8 +100,12 @@ Give output exactly in same format as example output.
     '''
         csv_files = glob.glob(os.path.join("./temp", "*.csv"))
         responses=[]
-        if len(csv_files) >= 1:
-            csv_file = csv_files[0]
+        #get file with name input.csv
+        csv_file = "./temp/input.csv"
+        
+        #check if file exists
+        if os.path.exists(csv_file):
+            #get input.csv
             df=load_data(csv_file)
             for i in range(len(df)):
                 if i==0:
@@ -143,9 +147,9 @@ async def process_files(files: list[UploadFile] = File(...)):
 
         os.makedirs("temp", exist_ok=True)
         
-        with open(f"temp/{csv_file.filename}", "wb") as f:
+        with open(f"temp/input.csv", "wb") as f:
             f.write(await csv_file.read())
-        headers=load_data(f"temp/{csv_file.filename}").columns.tolist()
+        headers=load_data(f"temp/input.csv").columns.tolist()
         
         pdf_file_path = f"temp/{pdf_file.filename}"
         with open(pdf_file_path, "wb") as f:
@@ -207,12 +211,9 @@ async def process_csv(file: UploadFile = File(...)):
 
 @app.get("/getAnomalyDetection")
 async def anomaly_detection():
-    for root, dirs, files in os.walk("./temp"):
-        for file in files:
-            if file.endswith(".csv"):
-                file_path = os.path.join(root, file)
+    csv_file = "./temp/input.csv"
     
-    data = pd.read_csv(file_path)
+    data = pd.read_csv(csv_file)
     unique_id_columns = ['Customer ID', 'Internal Obligor ID']  # Add all unique ID columns
     relevant_columns = unique_id_columns + [
         'Loan Amount', 'Outstanding Balance', 'Interest Rate', 'Total Assets',
